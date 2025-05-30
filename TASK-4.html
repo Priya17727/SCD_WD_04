@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>To-Do App</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #1f2937, #111827);
+      color: white;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+
+    .app {
+      margin-top: 50px;
+      width: 90%;
+      max-width: 600px;
+      background-color: #374151;
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+      animation: fadeIn 0.6s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 2rem;
+      color: #10b981;
+    }
+
+    .task-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    input[type="text"],
+    input[type="datetime-local"] {
+      padding: 12px;
+      border: 2px solid transparent;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    input:focus {
+      border-color: #10b981;
+      outline: none;
+      background-color: #1f2937;
+      color: white;
+    }
+
+    button {
+      padding: 12px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      background-color: #10b981;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s;
+    }
+
+    button:hover {
+      background-color: #059669;
+      transform: translateY(-2px);
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 25px;
+    }
+
+    li {
+      background-color: #4b5563;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      animation: fadeIn 0.4s ease-in-out;
+    }
+
+    .task-text {
+      font-size: 1.1rem;
+    }
+
+    .completed {
+      text-decoration: line-through;
+      color: #9ca3af;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .actions button {
+      background-color: #3b82f6;
+      padding: 8px 12px;
+      font-size: 0.9rem;
+    }
+
+    .actions button.delete {
+      background-color: #ef4444;
+    }
+
+    .actions button:hover {
+      opacity: 0.85;
+    }
+
+    .timestamp {
+      font-size: 0.8rem;
+      color: #d1d5db;
+    }
+
+    @media (max-width: 500px) {
+      .task-form {
+        gap: 8px;
+      }
+
+      input, button {
+        font-size: 0.95rem;
+      }
+
+      li {
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <h1>📝 To-Do List</h1>
+    <form class="task-form" onsubmit="addTask(event)">
+      <input type="text" id="task-input" placeholder="Enter your task..." required />
+      <input type="datetime-local" id="task-time" />
+      <button type="submit">Add Task</button>
+    </form>
+    <ul id="task-list"></ul>
+  </div>
+
+  <script>
+    const taskInput = document.getElementById("task-input");
+    const taskTime = document.getElementById("task-time");
+    const taskList = document.getElementById("task-list");
+
+    function addTask(e) {
+      e.preventDefault();
+      const text = taskInput.value.trim();
+      const time = taskTime.value;
+
+      if (!text) return;
+
+      const li = document.createElement("li");
+      const span = document.createElement("span");
+      span.textContent = text;
+      span.className = "task-text";
+
+      const timeSpan = document.createElement("div");
+      if (time) {
+        timeSpan.textContent = "⏰ " + new Date(time).toLocaleString();
+        timeSpan.className = "timestamp";
+      }
+
+      const actions = document.createElement("div");
+      actions.className = "actions";
+
+      const completeBtn = document.createElement("button");
+      completeBtn.textContent = "✓";
+      completeBtn.onclick = () => span.classList.toggle("completed");
+
+      const editBtn = document.createElement("button");
+      editBtn.textContent = "✏";
+      editBtn.onclick = () => {
+        const newText = prompt("Edit your task:", span.textContent);
+        if (newText) span.textContent = newText;
+      };
+
+      const deleteBtn = document.createElement("button");
+      deleteBtn.textContent = "🗑";
+      deleteBtn.className = "delete";
+      deleteBtn.onclick = () => taskList.removeChild(li);
+
+      actions.appendChild(completeBtn);
+      actions.appendChild(editBtn);
+      actions.appendChild(deleteBtn);
+
+      li.appendChild(span);
+      li.appendChild(timeSpan);
+      li.appendChild(actions);
+
+      taskList.appendChild(li);
+      taskInput.value = "";
+      taskTime.value = "";
+    }
+  </script>
+</body>
+</html>
+fix
